@@ -766,7 +766,7 @@ export default function App() {
           {/* Tab Render router */}
           <div className="flex-1 overflow-y-auto">
             {activeTab === 'chat' && (
-              <div className="p-4 pb-32 sm:p-6 sm:pb-8 md:p-8 md:pb-12 flex flex-col gap-5 min-h-full max-w-3xl mx-auto">
+              <div className="p-4 pb-4 sm:p-6 sm:pb-8 md:p-8 md:pb-12 flex flex-col gap-5 min-h-full max-w-3xl mx-auto">
                 
                 {/* Introduction info block */}
                 {activeSession && activeSession.messages.length <= 1 && (
@@ -889,7 +889,7 @@ export default function App() {
 
           {/* Input control container (only renders on bottom of active Chat Tab) */}
           {activeTab === 'chat' && (
-            <div className={`p-4 sm:p-6 border-t ${themeStyles.border} ${themeStyles.bgMain}/90 backdrop-blur-md shrink-0 max-md:absolute max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:z-30 max-md:border-t-0 max-md:bg-transparent max-md:p-4 max-md:pb-6`}>
+            <div className={`p-4 sm:p-6 border-t ${themeStyles.border} ${themeStyles.bgMain}/90 backdrop-blur-md shrink-0 max-md:border-t-0 max-md:bg-transparent max-md:p-3 max-md:pb-5`}>
               <form onSubmit={handleSendMessage} className="relative max-w-3xl mx-auto">
                 <div className={`absolute inset-0 ${isCharcoal ? 'bg-amber-500/5' : 'bg-indigo-500/5'} blur-2xl rounded-full`} />
                 <div className={`relative ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xl transition-all`}>
