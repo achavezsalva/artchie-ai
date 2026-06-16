@@ -1,0 +1,6 @@
+{
+  "name": "Artchie AI",
+  "description": "Artchie AI is a Filipino AI companion designed to chat, listen, inspire, entertain, motivate, and emotionally connect with users.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
