@@ -76,6 +76,33 @@ export default function App() {
 
   // Dynamic viewport height tracking for virtual keyboards on touch devices
   const [viewportHeight, setViewportHeight] = useState<number>(typeof window !== 'undefined' ? window.innerHeight : 800);
+  const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
+
+  // Dynamic height adjustment when browser fails to scale (e.g. within Facebook Messenger/Webviews)
+  const getAdjustedViewportHeight = () => {
+    if (isInputFocused && typeof window !== 'undefined' && window.innerWidth < 768) {
+      const vHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const viewportDidNotShrink = Math.abs(vHeight - window.innerHeight) < 80;
+      
+      if (viewportDidNotShrink) {
+        // Adjust lower to push the input area up above the mobile virtual keyboard overlay
+        const estimatedKeyboardHeight = 310;
+        return Math.max(vHeight - estimatedKeyboardHeight, 350);
+      }
+    }
+    return viewportHeight;
+  };
+
+  // Run scroll to bottom when focus state changes
+  useEffect(() => {
+    if (isInputFocused) {
+      setTimeout(() => {
+        if (chatBottomRef.current) {
+          chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+    }
+  }, [isInputFocused]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -541,7 +568,7 @@ export default function App() {
   return (
     <div 
       className={`w-full ${themeStyles.bgMain} text-slate-200 font-sans flex flex-col overflow-hidden select-none`}
-      style={{ height: `${viewportHeight}px` }}
+      style={{ height: `${getAdjustedViewportHeight()}px` }}
     >
       
       {/* Floating active dynamic memory notification banner */}
@@ -674,7 +701,7 @@ export default function App() {
           className={`w-64 max-w-full shrink-0 border-r ${themeStyles.border} ${themeStyles.bgSidebar} flex flex-col absolute md:static top-0 bottom-0 left-0 z-30 transition-transform duration-300 md:translate-x-0 ${
             leftSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
-          style={{ height: `${viewportHeight - 64}px` }}
+          style={{ height: `${getAdjustedViewportHeight() - 64}px` }}
         >
           {/* Mobile close button inside left side-panel */}
           <div className={`md:hidden flex justify-end p-2 border-b ${themeStyles.border}`}>
@@ -924,7 +951,7 @@ export default function App() {
 
           {/* Input control container (only renders on bottom of active Chat Tab) */}
           {activeTab === 'chat' && (
-            <div className={`p-4 sm:p-6 border-t ${themeStyles.border} ${themeStyles.bgMain}/90 backdrop-blur-md shrink-0 max-md:border-t-0 max-md:bg-transparent max-md:p-3 max-md:pb-5`}>
+            <div className={`p-4 sm:p-6 border-t ${themeStyles.border} ${themeStyles.bgMain}/95 backdrop-blur-md shrink-0 max-md:p-3 max-md:pb-5`}>
               <form onSubmit={handleSendMessage} className="relative max-w-3xl mx-auto">
                 <div className={`absolute inset-0 ${isCharcoal ? 'bg-amber-500/5' : 'bg-indigo-500/5'} blur-2xl rounded-full`} />
                 <div className={`relative ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xl transition-all`}>
@@ -940,6 +967,8 @@ export default function App() {
                     disabled={isLoadingChat}
                     value={inputMessage || ''}
                     onChange={(e) => setInputMessage(e.target.value)}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => setIsInputFocused(false)}
                     placeholder="Ano ang gusto mong sabihin ngayon? Tagalog, Bisaya, or English..."
                     className="flex-grow bg-transparent border-none text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-0 text-xs sm:text-sm py-2 px-1 focus:placeholder-slate-300 transition-all"
                   />
@@ -968,7 +997,7 @@ export default function App() {
         {rightSidebarOpen && (
           <aside
             className={`w-72 shrink-0 border-l ${themeStyles.border} ${themeStyles.bgSidebar} p-5 flex flex-col justify-between overflow-y-auto hidden lg:flex`}
-            style={{ height: `${viewportHeight - 64}px` }}
+            style={{ height: `${getAdjustedViewportHeight() - 64}px` }}
           >
             <div className="space-y-6">
               
