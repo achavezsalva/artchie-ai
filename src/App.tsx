@@ -55,7 +55,7 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState<boolean>(true);
 
   // Layout UI helper states
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(true);
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
   const [rightSidebarOpen, setRightSidebarOpen] = useState<boolean>(true);
   
   // Daily inspiration card status
@@ -172,6 +172,11 @@ export default function App() {
     };
     handleUpdateProfile(updated);
     setShowWelcome(false);
+    
+    // Auto collapse sidebar on mobile
+    if (window.innerWidth < 768) {
+      setLeftSidebarOpen(false);
+    }
     
     // Customize introduction for current user
     if (sessions.length > 0) {
@@ -319,6 +324,11 @@ export default function App() {
     setCurrentSessionId(newId);
     setActiveTab('chat');
     localStorage.setItem(LOCAL_STORAGE_SESSIONS_KEY, JSON.stringify(updated));
+
+    // Auto collapse sidebar on mobile
+    if (window.innerWidth < 768) {
+      setLeftSidebarOpen(false);
+    }
   };
 
   // Helper: delete a session
@@ -380,6 +390,11 @@ export default function App() {
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!inputMessage.trim() || isLoadingChat || !activeSession) return;
+
+    // Auto collapse left sidebar when sending messages inside a conversation on mobile screens
+    if (window.innerWidth < 768) {
+      setLeftSidebarOpen(false);
+    }
 
     const userText = inputMessage.trim();
     setInputMessage('');
@@ -576,7 +591,12 @@ export default function App() {
         {/* Tab Navigation Center */}
         <nav className="flex items-center bg-white/5 border border-white/5 p-1 rounded-xl gap-1 shrink-0">
           <button
-            onClick={() => setActiveTab('chat')}
+            onClick={() => {
+              setActiveTab('chat');
+              if (window.innerWidth < 768) {
+                setLeftSidebarOpen(false);
+              }
+            }}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'chat' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -585,7 +605,12 @@ export default function App() {
             <span className="hidden sm:inline">Chat Companion</span>
           </button>
           <button
-            onClick={() => setActiveTab('personality')}
+            onClick={() => {
+              setActiveTab('personality');
+              if (window.innerWidth < 768) {
+                setLeftSidebarOpen(false);
+              }
+            }}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'personality' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -594,7 +619,12 @@ export default function App() {
             <span className="hidden sm:inline">Modes & Config</span>
           </button>
           <button
-            onClick={() => setActiveTab('memory')}
+            onClick={() => {
+              setActiveTab('memory');
+              if (window.innerWidth < 768) {
+                setLeftSidebarOpen(false);
+              }
+            }}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'memory' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -603,7 +633,12 @@ export default function App() {
             <span className="hidden sm:inline">Memory Bank</span>
           </button>
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => {
+              setActiveTab('settings');
+              if (window.innerWidth < 768) {
+                setLeftSidebarOpen(false);
+              }
+            }}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'settings' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
             }`}
