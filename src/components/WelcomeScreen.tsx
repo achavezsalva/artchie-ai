@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Sparkles, Heart, MessageSquare, Compass } from 'lucide-react';
 import { UserProfile } from '../types';
 
-const artchieLogo = '/android-icon-192x192.png';
+const artchieLogo = '/favicons/android-icon-192x192.png';
 
 interface WelcomeScreenProps {
   onStart: (name: string) => void;
